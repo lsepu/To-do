@@ -15,6 +15,13 @@ const ListOfToDo = () => {
     });
   };
 
+  const onDelete = (note) => {
+      dispatch({
+          type: 'remove-note',
+          payload: note
+      })
+  }
+
   return (
     <div>
       <h1>Actions pending</h1>
@@ -32,6 +39,7 @@ const ListOfToDo = () => {
                 type="checkbox"
                 checked={note.done}
               />
+              <button onClick={() => onDelete(note)}>Delete</button>
             </li>
           );
         })}
