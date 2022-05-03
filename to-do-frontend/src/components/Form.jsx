@@ -2,43 +2,55 @@ import React, { useContext, useState, useRef } from "react";
 import { Store } from "./StoreProvider";
 
 const Form = () => {
+  const formRef = useRef(null);
 
+  const onAdd = async (e) => {
+    e.preventDefault();
 
-    const formRef = useRef(null);
+    if (title && message) {
+      const noteFromForm = {
+        title,
+        message,
+        done: false,
+      };
 
-  const onAdd = (e) => {
-      e.preventDefault();
+      let noteSavedPromise = await fetch(
+        `http://localhost:8081/api/save/note`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(noteFromForm),
+        }
+      );
 
-      if(title && message){
-          dispatch({
-              type: 'add-note',
-              payload: {
-                  title,
-                  message
-              }
-          })
-      }
+      let noteSaved = await noteSavedPromise.json();
 
-      formRef.current.reset(); 
+      dispatch({
+        type: "add-note",
+        payload: noteSaved,
+      });
+    }
 
+    formRef.current.reset();
   };
 
-  const {state, dispatch} = useContext(Store);
+  const { state, dispatch } = useContext(Store);
 
-  const [title, setTitle] = useState('');
-  const [message, setMessage] = useState('');
+  const [title, setTitle] = useState("");
+  const [message, setMessage] = useState("");
 
-  const addTitle = (e) =>{
-      setTitle(e.target.value);
-  }
+  const addTitle = (e) => {
+    setTitle(e.target.value);
+  };
 
-  const addMessage = (e) =>{
-      setMessage(e.target.value);
-}
-
+  const addMessage = (e) => {
+    setMessage(e.target.value);
+  };
 
   return (
-    <form ref={formRef}> 
+    <form ref={formRef}>
       <label>Title:</label>
       <input onChange={addTitle} type="text" name="title" />
       <label>Message:</label>
