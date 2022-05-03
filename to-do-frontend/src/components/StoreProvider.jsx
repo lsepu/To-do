@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from "react";
-import reducer from './Reducer';
+import reducer from "./Reducer";
 
 const initialState = {
   note: {
@@ -8,14 +8,7 @@ const initialState = {
     message: "",
     done: false,
   },
-  listOfNotes: [
-    {
-      id: "0",
-      title: "Title by default",
-      message: "Message by default",
-      done: false,
-    },
-  ],
+  listOfNotes: [],
 };
 
 const Store = createContext(initialState);
@@ -30,4 +23,4 @@ const StoreProvider = ({ children }) => {
 
 export default StoreProvider;
 
-export {Store, initialState};
+export { Store, initialState };
