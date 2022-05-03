@@ -30,17 +30,19 @@ function reducer(state, action) {
       return newStateWithNoteDelete;
 
     case "update-note":
-      const newListOfNotes = state.listOfNotes.filter(
-        (note) => note.id !== action.payload.id
-      );
-      const newListOfNotesWithModification = [
-        ...newListOfNotes,
-        action.payload,
-      ];
+
+      const newListOfNotes = state.listOfNotes.map((note) => {
+        if (note.id === action.payload.id) {
+          return action.payload;
+        }
+        return note;
+      });
+
       const newStateModifiedCheckbox = {
         ...state,
-        listOfNotes: newListOfNotesWithModification,
+        listOfNotes: newListOfNotes,
       };
+      
       return newStateModifiedCheckbox;
   }
 }

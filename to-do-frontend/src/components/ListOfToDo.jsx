@@ -5,42 +5,52 @@ const ListOfToDo = () => {
   const { state, dispatch } = useContext(Store);
 
   useEffect(() => {
-    let listOfNote = fetchAllNotes().then(
-      notes => {
-        let action = {
-          type: 'get-notes',
-          payload: notes
-        }
+    let listOfNote = fetchAllNotes().then((notes) => {
+      let action = {
+        type: "get-notes",
+        payload: notes,
+      };
 
-        dispatch(action);
+      dispatch(action);
+    });
+  }, []);
 
-      }
-    )
-  }, [])
-
-  const fetchAllNotes = async() => {
+  const fetchAllNotes = async () => {
     let response = await fetch(`http://localhost:8081/api/get/notes`);
     let data = await response.json();
     return data;
-  }
+  };
 
-  const onCheckbox = (e, note) => {
+  const onCheckbox = async (e, note) => {
     const checked = e.currentTarget.checked;
+
+    let noteWitchCheckBoxInformation = { ...note, done: checked };
+
+    let noteUpdatedPromise = await fetch(
+      `http://localhost:8081/api/update/note`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(noteWitchCheckBoxInformation),
+      }
+    );
+
+    let noteUpdated = await noteUpdatedPromise.json();
+
     dispatch({
       type: "update-note",
-      payload: {
-        ...note,
-        done: checked,
-      },
+      payload: noteUpdated,
     });
   };
 
   const onDelete = (note) => {
-      dispatch({
-          type: 'remove-note',
-          payload: note
-      })
-  }
+    dispatch({
+      type: "remove-note",
+      payload: note,
+    });
+  };
 
   return (
     <div>
